@@ -1,0 +1,20 @@
+{
+  "name": "fun-20260531-c-extra-cite-gap",
+  "version": "1.0.0",
+  "description": "Local-first citation gap auditor for academic drafts and reference keys.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check.js",
+    "verify:browser": "node scripts/browser-smoke.js"
+  },
+  "keywords": [
+    "academic-tool",
+    "citation-checker",
+    "research-notes",
+    "local-first",
+    "study-tool"
+  ],
+  "license": "MIT"
+}

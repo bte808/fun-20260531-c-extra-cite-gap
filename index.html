@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Local-first citation gap auditor for academic drafts, BibTeX keys, and Markdown references.">
+    <title>Cite Gap Audit</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Local academic draft helper</p>
+        <h1>Cite Gap Audit</h1>
+      </div>
+      <div class="header-actions" aria-label="Audit controls">
+        <button id="sample" type="button">Sample</button>
+        <button id="clear" type="button">Clear</button>
+        <button id="analyze" class="primary" type="button">Analyze</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="input-pane" aria-label="Draft and reference inputs">
+        <div class="field-block">
+          <label for="draft">Draft text</label>
+          <textarea id="draft" spellcheck="true" aria-describedby="draft-help"></textarea>
+          <p id="draft-help">Supports LaTeX citations such as \cite{key} and Pandoc citations such as [@key].</p>
+        </div>
+        <div class="field-block">
+          <label for="references">Reference keys</label>
+          <textarea id="references" spellcheck="false" aria-describedby="refs-help"></textarea>
+          <p id="refs-help">Paste BibTeX, Markdown reference lists, or lines like id: smith2024.</p>
+        </div>
+      </section>
+
+      <section class="result-pane" aria-label="Audit results">
+        <div class="score-strip">
+          <div class="score-box" aria-label="Citation audit score">
+            <strong id="score-value">0</strong>
+            <span id="score-label">loading</span>
+          </div>
+          <div class="visual-panel">
+            <span>Key balance</span>
+            <div id="visual-bars" class="visual-bars"></div>
+          </div>
+        </div>
+
+        <div id="summary-grid" class="summary-grid" aria-live="polite"></div>
+
+        <div class="audit-section">
+          <h2>Missing reference keys</h2>
+          <ul id="missing-list" class="issue-list"></ul>
+        </div>
+
+        <div class="audit-section">
+          <h2>Unused reference keys</h2>
+          <ul id="unused-list" class="issue-list"></ul>
+        </div>
+
+        <div class="audit-section">
+          <h2>Sentences to source-check</h2>
+          <ul id="source-list" class="issue-list sentence-list"></ul>
+        </div>
+
+        <details class="audit-section">
+          <summary>Detected citation groups</summary>
+          <ul id="citation-list" class="issue-list compact-list"></ul>
+        </details>
+
+        <details class="audit-section">
+          <summary>Duplicate bibliography keys</summary>
+          <ul id="duplicate-list" class="issue-list compact-list"></ul>
+        </details>
+
+        <div class="report-actions">
+          <button id="copy" type="button">Copy Markdown</button>
+          <button id="download" type="button">Download .md</button>
+          <span id="status-line" role="status">Ready.</span>
+        </div>
+        <textarea id="markdown-output" class="markdown-output" readonly aria-label="Generated Markdown report"></textarea>
+      </section>
+    </main>
+
+    <footer>
+      <p>Checks citation-key consistency only. It does not verify that a source exists, supports the claim, or is appropriate.</p>
+    </footer>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
