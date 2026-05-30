@@ -20,7 +20,7 @@ const html = readFileSync(join(root, "index.html"), "utf8");
 const scriptMatches = Array.from(html.matchAll(/<script[^>]+src="([^"]+)"/g), (match) => match[1]);
 const cssMatches = Array.from(html.matchAll(/<link[^>]+href="([^"]+)"/g), (match) => match[1]);
 
-[...scriptMatches, ...cssMatches].forEach((asset) => {
+[...scriptMatches, ...cssMatches].filter((asset) => !asset.startsWith("data:")).forEach((asset) => {
   assert.ok(existsSync(join(root, asset)), `Referenced asset is missing: ${asset}`);
 });
 
