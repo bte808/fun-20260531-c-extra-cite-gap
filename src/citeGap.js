@@ -132,6 +132,13 @@ export function analyzeCitationGaps(draftText, referenceText) {
     duplicateBibliography: duplicateBibliography.length,
     score
   };
+  const nextReviewMove = buildNextReviewMove({
+    stats,
+    missingReferences,
+    unusedReferences,
+    duplicateBibliography,
+    citationNeeded
+  });
 
   return {
     citationGroups,
@@ -141,6 +148,7 @@ export function analyzeCitationGaps(draftText, referenceText) {
     unusedReferences,
     duplicateBibliography,
     citationNeeded,
+    nextReviewMove,
     citedKeyCounts: citationMap,
     stats,
     markdown: buildMarkdownReport({
@@ -149,6 +157,7 @@ export function analyzeCitationGaps(draftText, referenceText) {
       unusedReferences,
       duplicateBibliography,
       citationNeeded,
+      nextReviewMove,
       citedKeys,
       referenceKeys
     })
@@ -170,6 +179,11 @@ export function buildMarkdownReport(result) {
     `- Reference keys not used in draft: ${result.stats.unusedReferences}`,
     `- Sentences that may need a source: ${result.stats.citationNeeded}`,
     "",
+    "## Next Review Move",
+    "",
+    `- ${result.nextReviewMove.title}: ${result.nextReviewMove.detail}`,
+    `- Why first: ${result.nextReviewMove.reason}`,
+    "",
     "## Missing Reference Keys",
     ""
   ];
@@ -186,6 +200,58 @@ export function buildMarkdownReport(result) {
   lines.push("- It does not verify that a citation is correct, relevant, or real.");
 
   return lines.join("\n");
+}
+
+function buildNextReviewMove({ stats, missingReferences, unusedReferences, duplicateBibliography, citationNeeded }) {
+  if (missingReferences.length) {
+    const keys = missingReferences.slice(0, 3).join(", ");
+    return {
+      title: "Repair missing reference keys",
+      detail: `Add, rename, or remove ${keys}${missingReferences.length > 3 ? " and the remaining missing keys" : ""}.`,
+      reason: "A cited key without a bibliography entry is the fastest citation breakage to confirm."
+    };
+  }
+
+  if (duplicateBibliography.length) {
+    const keys = duplicateBibliography.slice(0, 3).map((item) => item.key).join(", ");
+    return {
+      title: "Merge duplicate bibliography keys",
+      detail: `Resolve duplicate entries for ${keys}.`,
+      reason: "Duplicate keys make citation-manager imports and exports ambiguous."
+    };
+  }
+
+  if (citationNeeded.length) {
+    const first = citationNeeded[0];
+    return {
+      title: "Source-check the strongest claim cue",
+      detail: `Start at line ${first.line}: ${first.text}`,
+      reason: "Unsupported claim-like sentences need human review before polishing reference lists."
+    };
+  }
+
+  if (unusedReferences.length) {
+    const keys = unusedReferences.slice(0, 3).join(", ");
+    return {
+      title: "Prune or cite unused references",
+      detail: `Review ${keys}${unusedReferences.length > 3 ? " and the remaining unused keys" : ""}.`,
+      reason: "Unused entries are usually harmless, but trimming them keeps the draft easier to audit."
+    };
+  }
+
+  if (!stats.citationGroups && !stats.referenceKeys) {
+    return {
+      title: "Paste a cited draft and reference list",
+      detail: "Load the sample or paste text with citation keys to start an audit.",
+      reason: "The checker needs both cited keys and reference keys before it can find gaps."
+    };
+  }
+
+  return {
+    title: "Ready for source-truth review",
+    detail: "Key consistency looks clean; now check whether each source actually supports its claim.",
+    reason: "This tool checks key hygiene, not source relevance or correctness."
+  };
 }
 
 function splitKeyList(value) {

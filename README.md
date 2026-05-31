@@ -29,6 +29,7 @@ This project aims to be worth starring because it is:
 - Parse Pandoc-style citations such as `[@smith2024; @lee2025]`.
 - Parse reference keys from BibTeX, Markdown lists such as `- [smith2024] ...`, and `id: smith2024` lines.
 - Report missing reference keys, unused reference keys, duplicate bibliography keys, and source-check sentence cues.
+- Recommend the next review move so you know whether to repair missing keys, merge duplicates, source-check a claim, or prune unused references first.
 - Show a compact key-balance visual.
 - Copy or download a Markdown report.
 - Run entirely in the browser with no login, network call, or API key.
@@ -56,6 +57,8 @@ Reference excerpt:
 - [lee2025] Lee, M. Synthetic source note.
 - [unused2022] Unused sample reference kept here on purpose.
 ```
+
+The generated Markdown report starts with a score and a `Next Review Move` section. That keeps the exported checklist useful in a lab meeting or writing session because the first repair step is visible before the longer issue lists.
 
 ## How to run
 

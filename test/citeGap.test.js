@@ -27,6 +27,8 @@ test("finds missing references and unused bibliography keys", () => {
   const result = analyzeCitationGaps("One supported point \\cite{have2024}. One gap \\cite{missing2026}.", "@article{have2024,\n}\n- [unused2022] note");
   assert.deepEqual(result.missingReferences, ["missing2026"]);
   assert.deepEqual(result.unusedReferences, ["unused2022"]);
+  assert.equal(result.nextReviewMove.title, "Repair missing reference keys");
+  assert.match(result.markdown, /Next Review Move/);
 });
 
 test("flags claim-like sentences that do not contain source markers", () => {
@@ -34,6 +36,7 @@ test("flags claim-like sentences that do not contain source markers", () => {
   const result = analyzeCitationGaps(draft, "");
   assert.equal(result.citationNeeded.length, 1);
   assert.equal(result.citationNeeded[0].reason, "numeric claim");
+  assert.equal(result.nextReviewMove.title, "Source-check the strongest claim cue");
 });
 
 test("sample produces an actionable audit report", () => {

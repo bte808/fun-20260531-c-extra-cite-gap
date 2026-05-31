@@ -16,6 +16,9 @@ const unusedList = document.querySelector("#unused-list");
 const sourceList = document.querySelector("#source-list");
 const duplicateList = document.querySelector("#duplicate-list");
 const citationList = document.querySelector("#citation-list");
+const nextReviewTitle = document.querySelector("#next-review-title");
+const nextReviewDetail = document.querySelector("#next-review-detail");
+const nextReviewReason = document.querySelector("#next-review-reason");
 const markdownOutput = document.querySelector("#markdown-output");
 const visualBars = document.querySelector("#visual-bars");
 
@@ -58,8 +61,15 @@ function render(result) {
   renderSentenceList(sourceList, result.citationNeeded);
   renderDuplicateList(duplicateList, result.duplicateBibliography);
   renderCitationGroups(citationList, result.citationGroups);
+  renderNextReviewMove(result.nextReviewMove);
   renderVisualBars(result.stats);
   markdownOutput.value = result.markdown;
+}
+
+function renderNextReviewMove(move) {
+  nextReviewTitle.textContent = move.title;
+  nextReviewDetail.textContent = move.detail;
+  nextReviewReason.textContent = move.reason;
 }
 
 function renderKeyList(container, keys, emptyText) {

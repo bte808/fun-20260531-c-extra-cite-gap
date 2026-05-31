@@ -266,6 +266,31 @@ footer p {
   padding: 14px;
 }
 
+.next-review {
+  display: grid;
+  gap: 8px;
+  border-left: 5px solid var(--teal);
+}
+
+.next-review h2 {
+  margin-bottom: 0;
+}
+
+.next-review strong {
+  color: var(--teal);
+  font-size: 1.05rem;
+}
+
+.next-review p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.next-review span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 details.audit-section summary {
   cursor: pointer;
   font-weight: 800;
